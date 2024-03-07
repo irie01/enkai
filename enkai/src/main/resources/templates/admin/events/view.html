@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+
+<head>
+	<meta charset="UTF-8" th:remove="tag">
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<h1>イベント詳細</h1>
+		<table class="table table-striped mt-4">
+			<thead class="bg-primary text-white">
+				<tr>
+					<th>id</th>
+					<th>イベント名</th>
+					<th>最大参加人数</th>
+					<th>カテゴリ</th>
+					<th>管理ユーザ</th>
+					<th>作成日時</th>
+					<th>更新日時</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="event: ${events}" th:object="${event}">
+					<td th:text="*{id}"></td>
+					<td th:text="*{name}"></td>
+					<td th:text="*{max_participant}"></td>
+					<td th:text="*{category.name}"></td>
+					<td th:text="*{user.email}"></td>
+					<td th:text="*{#dates.format(createdAt, 'yyyy年MM月dd日HH時mm分ss秒')}"></td>
+					<td th:text="*{#dates.format(modifiedAt, 'yyyy年MM月dd日HH時mm分ss秒')}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="d-flex justify-content-center align-items-center">
+			<h1>現在の参加者：<td th:text="${size}"></td>名</h1>
+		</div>
+		<h1>イベント参加者</h1>
+		<table class="table table-striped mt-4">
+			<thead class="bg-primary text-white">
+				<tr>
+					<th>ユーザID</th>
+					<th>ユーザ名</th>
+					<th>作成日時</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="eventuser: ${eventusers}" th:object="${eventuser}">
+					<td th:text="*{id}"></td>
+					<td th:text="*{user.email}"></td>
+					<td th:text="*{#dates.format(createdAt, 'yyyy年MM月dd日HH時mm分ss秒')}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<th:block th:if="${email} != ''">
+			<div class="d-flex justify-content-center align-items-center">
+				<a th:href="@{/admin/eventusers/create/{id}(id=*{id})}" class="btn btn-primary ">参加する</a>
+			</div>
+		</th:block>
+		<br>
+		<th:block th:if="${email} != ''">	
+			<div class="d-flex justify-content-center align-items-center">
+				<a th:href="@{/admin/chats/talk/{id}(id=*{id})}" class="btn btn-primary ">チャットに参加する</a>&nbsp;
+				<a th:href="@{/admin/eventusers/delete/{id}(id=*{id})}" class="btn btn-danger">辞退する</a>
+			</div>
+		</th:block>
+</body>
+
+</html>
